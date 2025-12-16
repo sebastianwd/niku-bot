@@ -7,4 +7,5 @@ export const config = {
   SYSTEM_PROMPT: process.env.SYSTEM_PROMPT || '',
   PROMPT_CUTOFF_PATTERN: process.env.PROMPT_CUTOFF_PATTERN || '',
   DEFAULT_PREFIX: process.env.DEFAULT_PREFIX || ',',
+  DEFAULT_PRESENCE: process.env.DEFAULT_PRESENCE || '',
 }

@@ -1,6 +1,6 @@
 # Niku Bot
 
-A Discord bot built with Sapphire Framework.
+A Discord bot built with the [Sapphire Framework](https://github.com/sapphiredev/framework).
 
 ## Features
 

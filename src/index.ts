@@ -29,7 +29,7 @@ client.once('ready', () => {
     activities: [
       {
         type: ActivityType.Listening,
-        name: '👂 your commands',
+        name: config.DEFAULT_PRESENCE,
       },
     ],
   })
