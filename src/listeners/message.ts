@@ -39,6 +39,17 @@ export class MessageListener extends Listener {
       return
     }
 
+    log.info(
+      {
+        userId: message.author.id,
+        username: message.author.username,
+        channelId: message.channel.id,
+        contentLength: userContent.length,
+        isDM,
+      },
+      'Processing chatbot request',
+    )
+
     if (!config.SYSTEM_PROMPT) {
       log.warn('SYSTEM_PROMPT is not set')
     }
@@ -53,6 +64,8 @@ export class MessageListener extends Listener {
         return
       }
 
+      log.info({ model: config.OPENROUTER_MODEL }, 'Starting AI stream')
+
       const result = streamText({
         model: openrouter(config.OPENROUTER_MODEL),
         prompt: config.SYSTEM_PROMPT.replace('{user_content}', userContent),
@@ -63,7 +76,7 @@ export class MessageListener extends Listener {
       let fullResponse = ''
       let responseMessage: Message | null = null
       let lastUpdate = Date.now()
-      const updateInterval = 1000
+      const updateInterval = 3000
 
       for await (const delta of result.textStream) {
         fullResponse += delta
@@ -80,6 +93,7 @@ export class MessageListener extends Listener {
 
         if (!responseMessage && processedResponse.length > 0) {
           responseMessage = await message.reply(processedResponse)
+          log.info({ messageId: responseMessage.id, responseLength: processedResponse.length }, 'Sent initial response')
           lastUpdate = Date.now()
           continue
         }
@@ -116,8 +130,13 @@ export class MessageListener extends Listener {
               await message.channel.send(chunks[i])
             }
           }
+          log.info(
+            { messageId: responseMessage.id, totalLength: processedResponse.length, chunks: chunks.length },
+            'Stream completed, sent multiple messages',
+          )
         } else {
           await responseMessage.edit(processedResponse)
+          log.info({ messageId: responseMessage.id, responseLength: processedResponse.length }, 'Stream completed')
         }
       }
     } catch (error) {

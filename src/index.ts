@@ -22,7 +22,7 @@ const client = new SapphireClient({
 
 void client.login(config.TOKEN)
 
-client.once('ready', () => {
+client.once('clientReady', () => {
   log.info('Client is ready')
 
   client.user?.setPresence({
@@ -35,12 +35,16 @@ client.once('ready', () => {
   })
 })
 
-process.on('uncaughtException', (stderr) => {
-  log.error('uncaughtException')
-  log.trace(stderr.message)
+process.on('uncaughtException', (error) => {
+  log.error({ error, stack: error.stack }, 'Uncaught exception')
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1)
+  }
 })
 
-process.on('unhandledRejection', (stderr) => {
-  log.error('unhandledRejection')
-  log.trace(stderr as string)
+process.on('unhandledRejection', (reason, promise) => {
+  log.error({ reason, promise }, 'Unhandled promise rejection')
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1)
+  }
 })

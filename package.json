@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsdown",
-    "start": "cd dist && node index.js"
+    "start": "cd dist && node index.mjs"
   },
   "keywords": [],
   "author": "@sebastianwd",
