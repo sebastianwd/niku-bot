@@ -66,9 +66,13 @@ export class MessageListener extends Listener {
 
       log.info({ model: config.OPENROUTER_MODEL }, 'Starting AI stream')
 
+      const prompt = config.SYSTEM_PROMPT.replace('{user_content}', userContent)
+
+      log.info({ prompt }, 'Prompt')
+
       const result = streamText({
         model: openrouter(config.OPENROUTER_MODEL),
-        prompt: config.SYSTEM_PROMPT.replace('{user_content}', userContent),
+        prompt,
       })
 
       await message.react('🤔')
