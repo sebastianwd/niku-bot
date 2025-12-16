@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "dockerfileLines": [
+    "FROM nikolaik/python-nodejs:python3.13-nodejs22-alpine",
+    "ENV PNPM_HOME=\"/pnpm\"",
+    "ENV PATH=\"$PNPM_HOME:$PATH\"",
+    "RUN corepack enable",
+    "RUN apk add --no-cache ffmpeg",
+    "RUN apk --no-cache add build-base",
+    "RUN mkdir -p /usr/src/app",
+    "WORKDIR /usr/src/app",
+    "COPY ./package.json /usr/src/app/",
+    "COPY ./pnpm-lock.yaml /usr/src/app/",
+    "RUN pnpm install -g node-gyp",
+    "RUN pnpm install --frozen-lockfile",
+    "COPY ./ /usr/src/app",
+    "ENV NODE_ENV production",
+    "RUN pnpm run build",
+    "CMD [ \"pnpm\", \"start\" ]"
+  ]
+}
