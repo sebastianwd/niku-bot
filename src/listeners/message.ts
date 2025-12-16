@@ -143,6 +143,8 @@ export class MessageListener extends Listener {
           log.info({ messageId: responseMessage.id, responseLength: processedResponse.length }, 'Stream completed')
         }
       }
+
+      log.info({ fullResponse }, 'Stream completed')
     } catch (error) {
       log.error({ error }, 'Error in chatbot')
       await message.reply('Sorry, I encountered an error while processing your message.').catch(() => {})
